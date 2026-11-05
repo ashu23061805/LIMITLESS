@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LIMITLESS</title>
+<style>
+:root{--bg:#03060f;--panel:#07132b;--line:#1d5fd8;--cy:#35e6ff;--tx:#d8ecff;--mu:#7f9bc4;--red:#ff4d6d;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font-family:"Rajdhani","Segoe UI",system-ui,sans-serif;font-size:17px;min-height:100%}
+body{max-width:520px;margin:0 auto;position:relative}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 0,#0c2a6a55,transparent 60%);pointer-events:none;z-index:-1}
+h1,h2,h3{font-family:"Orbitron","Arial Black",sans-serif;letter-spacing:.06em;margin:.2em 0}
+h1{font-size:2.2rem;color:var(--cy);text-shadow:0 0 18px var(--cy)}h2{font-size:1.1rem;color:var(--cy)}h3{font-size:.95rem}
+.scr{padding:18px 16px 90px;min-height:100vh}
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:90vh;gap:14px}
+.win{background:linear-gradient(160deg,#0a1c40cc,#050c1ecc);border:1px solid var(--line);box-shadow:0 0 14px #1d5fd855 inset,0 0 12px #1d5fd844;padding:14px;margin:12px 0;border-radius:4px}
+button,.btn{font:inherit;font-weight:700;letter-spacing:.08em;background:#0a2a66;color:var(--tx);border:1px solid var(--cy);padding:12px 18px;border-radius:3px;box-shadow:0 0 12px #35e6ff55;cursor:pointer;width:100%;margin:6px 0}
+button:hover{background:#0f3a8a}button.ghost{background:transparent;border-color:var(--line);box-shadow:none;color:var(--mu)}button.danger{border-color:var(--red);color:var(--red);box-shadow:none;background:transparent}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+input,select{font:inherit;width:100%;padding:11px;background:#040b1c;color:var(--tx);border:1px solid var(--line);border-radius:3px;margin:5px 0 10px}
+label{color:var(--mu);font-size:.9rem}
+.bar{height:12px;background:#07132b;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin:4px 0 10px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#1d5fd8,var(--cy));box-shadow:0 0 10px var(--cy);transition:width 1s}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.mu{color:var(--mu)}.big{font-size:3.4rem;font-family:Orbitron,sans-serif;font-weight:900}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;display:flex;background:#030a1ae8;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);backdrop-filter:blur(6px)}
+nav button{margin:0;border:0;box-shadow:none;background:none;font-size:.62rem;padding:12px 2px;color:var(--mu);border-radius:0}nav button.on{color:var(--cy);border-top:2px solid var(--cy)}
+.msg{font-family:Orbitron,sans-serif;font-size:1.05rem;color:var(--cy);text-shadow:0 0 12px var(--cy);opacity:0;animation:in 1s forwards}
+@keyframes in{to{opacity:1}}@keyframes sp{to{transform:rotate(360deg)}}
+.ring{width:84px;height:84px;border:3px solid #1d5fd8;border-top-color:var(--cy);border-radius:50%;animation:sp 1.2s linear infinite;box-shadow:0 0 22px var(--cy)}
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:-1}
+.ex{display:grid;grid-template-columns:1fr 78px;gap:8px;align-items:center;border-bottom:1px solid #12356e;padding:8px 0}.ex input{margin:0}
+.chip{display:inline-block;border:1px solid var(--line);padding:3px 9px;margin:3px;font-size:.85rem;border-radius:2px}.chip.got{border-color:var(--cy);color:var(--cy);box-shadow:0 0 8px #35e6ff66}
+.rk{font-family:Orbitron,sans-serif;font-weight:900}
+.ico{width:40px;height:40px;padding:0;margin:0;border-radius:50%;font-size:1.1rem;background:#07132bcc}.tr{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:8px;z-index:5}.ov{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}.ov .win{width:100%;max-width:440px;max-height:85vh;overflow:auto;margin:0;background:#050c1e}.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin:10px 0}.wk div{border:1px solid var(--line);padding:6px 0;font-size:.8rem}.wk .t{border-color:var(--cy);box-shadow:0 0 8px var(--cy)}.wk b{display:block;font-size:1rem}
+@property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
+.win{position:relative;border-color:#1d5fd855}
+.win::before,.win::after{content:"";position:absolute;pointer-events:none;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.win::before{inset:-6px;border-radius:10px;padding:6px;background:linear-gradient(0deg,#1d5fd8 0%,#35e6ff88 55%,#1d5fd822 100%);filter:url(#fl) blur(1.2px);animation:fa .7s ease-in-out infinite alternate}
+.win::after{inset:-3px;border-radius:7px;padding:3px;background:linear-gradient(0deg,#fff 0%,#a8f5ff 35%,#35e6ff 100%);filter:url(#fl) drop-shadow(0 0 4px #35e6ff);animation:fb .45s ease-in-out infinite alternate}
+@keyframes fa{from{opacity:.55;transform:scale(1,1)}to{opacity:1;transform:scale(1.01,1.02)}}@keyframes fb{from{opacity:.65}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.win::before,.win::after{filter:none}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition:none!important}}
+</style></head><body>
+<canvas id="cv" aria-hidden="true"></canvas><svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="fl" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.03 0.09" numOctaves="2" seed="3" result="n"><animate attributeName="baseFrequency" dur="2.2s" values="0.03 0.09;0.04 0.13;0.03 0.09" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="10"/></filter></svg><div id="app"></div><div id="nv"></div>
+<script>
+const RANKS=[["E",0,"#7f9bc4"],["D",1000,"#4dff9e"],["C",2500,"#35e6ff"],["B",5000,"#5b8cff"],["A",8500,"#b36bff"],["S",13000,"#ffc933"],["SSS",20000,"#ff4d6d"]];
+const DB="limitless_v1",$=s=>document.querySelector(s),app=$("#app");
+let S=null,tab="status",step=0,tmp={};
+const today=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const ago=n=>{const d=new Date();d.setDate(d.getDate()-n);return today(d)};
+function load(){try{return JSON.parse(localStorage.getItem(DB))}catch(e){return null}}
+function save(){try{localStorage.setItem(DB,JSON.stringify(S))}catch(e){}}
+async function hash(p){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(p+"limitless"));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+const rank=xp=>{let r=0;RANKS.forEach((x,i)=>{if(xp>=x[1])r=i});return r};
+const lvl=xp=>Math.floor(xp/150)+1;
+function addXP(n,why){const before=rank(S.xp);S.xp=Math.max(0,S.xp+n);S.xpLog.push({d:today(),n,why});const a=rank(S.xp);
+ if(a>before){S.rankHist.push({r:RANKS[a][0],d:today()});toast(a==6?"SSS-RANK ACHIEVED. THE JOURNEY IS COMPLETE.":"RANK UP: "+RANKS[a][0]+"-RANK")}save()}
+function toast(t){const e=document.createElement("div");e.className="win";e.style.cssText="position:fixed;top:14px;left:12px;right:12px;z-index:9;text-align:center;max-width:496px;margin:auto";e.innerHTML="<b class='rk' style='color:var(--cy)'>"+t+"</b>";document.body.append(e);setTimeout(()=>e.remove(),3200)}
+/* particles */
+const cv=$("#cv"),cx=cv.getContext("2d");let P=[];function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();addEventListener("resize",rs);
+for(let i=0;i<50;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:.2+Math.random()*.6,r:Math.random()*1.8});
+(function f(){cx.clearRect(0,0,cv.width,cv.height);cx.fillStyle="#35e6ff";P.forEach(p=>{p.y-=p.v;if(p.y<0){p.y=cv.height;p.x=Math.random()*cv.width}cx.globalAlpha=.5;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()});requestAnimationFrame(f)})();
+/* flow */
+function nav(){$("#nv").innerHTML=S&&S.done?"<nav>"+[["status","STATUS"],["quests","QUESTS"],["train","TRAINING"],["scan","AI SCANNER"],["ach","ACHIEVEMENTS"]].map(t=>`<button class="${tab==t[0]?"on":""}" onclick="tab='${t[0]}';go()">${t[1]}</button>`).join("")+"</nav>":""}
+function go(){$("#nv").innerHTML="";if(!S)return auth();if(!S.username)return nameScr();if(!S.seen)return awaken();if(!S.accepted)return challenge();if(!S.done)return assess();penalties();home()}
+function launch(){app.innerHTML=`<div class="scr center"><div class="ring"></div><h1>LIMITLESS</h1><p class="mu" style="letter-spacing:.3em">UNLEASH YOUR FULL POTENTIAL</p></div>`;setTimeout(()=>{S=load();go()},2200)}
+function auth(){app.innerHTML=`<div class="scr"><h1>LIMITLESS</h1><div class="win"><h2>HUNTER LOGIN</h2>
+<label>Email</label><input id="em" type="email" autocomplete="email"><label>Password (6+ characters)</label><input id="pw" type="password" autocomplete="current-password">
+<button onclick="signup()">CREATE ACCOUNT</button><button class="ghost" onclick="login()">LOG IN</button><p id="er" style="color:var(--red)"></p></div>
+<div class="win"><h3>SOCIAL SIGN-IN</h3><p class="mu">Google, Facebook and Apple sign-in need provider OAuth keys and a server, so they are not available in this web build. They belong in the native build (see notes).</p></div></div>`}
+async function signup(){const e=$("#em").value.trim(),p=$("#pw").value;if(!/^\S+@\S+\.\S+$/.test(e)||p.length<6)return $("#er").textContent="Enter a valid email and a password of 6+ characters.";
+ S={email:e,ph:await hash(p),username:"",seen:false,accepted:false,done:false,xp:0,xpLog:[],days:{},log:[],rankHist:[{r:"E",d:today()}],stats:{str:0,sta:0,hp:0},paused:false,lastCheck:today(),sel:"full",assess:[]};save();go()}
+async function login(){const o=load(),e=$("#em").value.trim();if(!o||o.email!==e||o.ph!==await hash($("#pw").value))return $("#er").textContent="No match on this device. Check your email and password, or create an account.";S=o;go()}
+function nameScr(){app.innerHTML=`<div class="scr"><div class="win"><h2>CHOOSE YOUR HUNTER NAME</h2><input id="un" maxlength="16" placeholder="Username"><button onclick="setName()">CONFIRM</button><p id="er" style="color:var(--red)"></p></div></div>`}
+function setName(){const u=$("#un").value.trim();if(!/^[A-Za-z0-9_]{3,16}$/.test(u))return $("#er").textContent="Use 3–16 letters, numbers or underscores.";S.username=u;save();go()}
+function awaken(){const L=["SYSTEM ACTIVATED","HUNTER DETECTED","CURRENT RANK: E","POTENTIAL: UNDETERMINED","ARE YOU READY TO EVOLVE BEYOND YOUR LIMITS?","E-RANK → SSS-RANK"];
+ app.innerHTML=`<div class="scr center" id="aw"></div>`;L.forEach((t,i)=>setTimeout(()=>{$("#aw").insertAdjacentHTML("beforeend",`<div class="msg">${t}</div>`)},900+i*1300));
+ setTimeout(()=>{S.seen=true;save();go()},900+L.length*1300+1200)}
+const SAV=["Running already? Even the weakest E-Rank gets back up tomorrow, but you won't.","Fleeing detected. The System has seen sturdier hunters lose to a flight of stairs.","Declined. Don't worry, the couch has no rank requirement."];
+function challenge(){app.innerHTML=`<div class="scr center"><h2>HUNTER CHALLENGE</h2><button onclick="S.accepted=true;save();go()">[ ACCEPT THE CHALLENGE ]</button><button class="ghost" onclick="decline()">[ DECLINE — RUN AWAY ]</button><div id="dm"></div></div>`}
+function decline(){$("#dm").innerHTML=`<div class="win"><p class="msg" style="font-size:.95rem">${SAV[Math.floor(Math.random()*SAV.length)]}</p><button onclick="go()">I CHANGED MY MIND</button><button class="danger" onclick="delAcc()">DELETE MY ACCOUNT…</button><p class="mu" style="font-size:.85rem">Your account is only deleted if you choose it and confirm.</p></div>`}
+function delAcc(){if(confirm("Permanently delete your account and all data on this device? This cannot be undone.")){localStorage.removeItem(DB);S=null;go()}}
+const QS=[["age","Age","number"],["gender","Gender (optional)","text"],["h","Height (cm)","number"],["w","Weight (kg)","number"],["exp","Fitness experience","sel:Beginner,Some experience,Regular trainer"],["goal","Main goal","sel:Build strength,Lose fat,Improve stamina,General health"],["mins","Minutes available per day","number"],["equip","Equipment","sel:None,Dumbbells,Pull-up bar,Both"],["limits","Injuries or movement limits (optional)","text"]];
+function assess(){const q=QS[step];let f=q[2].startsWith("sel:")?`<select id="a">${q[2].slice(4).split(",").map(o=>`<option>${o}</option>`).join("")}</select>`:`<input id="a" type="${q[2]}">`;
+ app.innerHTML=`<div class="scr"><h2>HEALTH ASSESSMENT ${step+1}/${QS.length}</h2><div class="bar"><i style="width:${(step+1)/QS.length*100}%"></i></div><div class="win"><label>${q[1]}</label>${f}<button onclick="nextQ()">NEXT</button></div></div>`}
+function nextQ(){const q=QS[step],v=$("#a").value.trim(),opt=q[1].includes("optional");if(!v&&!opt)return toast("Answer required");
+ if(q[2]=="number"&&(+v<=0||+v>(q[0]=="age"?100:q[0]=="mins"?240:q[0]=="h"?250:400)))return toast("Enter a realistic number");
+ tmp[q[0]]=v;step++;if(step<QS.length)return assess();
+ const bmi=tmp.w/Math.pow(tmp.h/100,2);S.profile=tmp;S.bmi=bmi;S.done=true;S.stats={str:3,sta:3,hp:5};save();
+ const c=bmi<18.5?"below the typical range":bmi<25?"within the typical range":bmi<30?"above the typical range":"well above the typical range";
+ app.innerHTML=`<div class="scr"><div class="win"><h2>ASSESSMENT COMPLETE</h2><p>BMI ${bmi.toFixed(1)} is ${c} for adults. This is a general indicator, not a diagnosis.</p><p class="mu">Your beginner plan is ready. Start gently; difficulty rises as you level up. If you have a health condition or injury, check with a doctor before training.</p><button onclick="go()">ENTER THE SYSTEM</button></div></div>`}
+/* data */
+const EX={chest:["Push-ups","Incline push-ups","Wide push-ups"],back:["Superman holds","Reverse snow angels","Door-frame rows"],shoulders:["Pike push-ups","Arm circles","Plank shoulder taps"],arms:["Bench dips","Diamond push-ups","Towel curls"],abs:["Crunches","Leg raises","Plank (sec)"],legs:["Bodyweight squats","Lunges","Glute bridges"]};
+const SEL={full:["chest","back","legs","abs"],upper:["chest","back","shoulders","arms"],lower:["legs","abs"],chest:["chest"],back:["back"],shoulders:["shoulders"],arms:["arms"],abs:["abs"],legs:["legs"]};
+const stage=()=>Math.min(3,Math.floor(rank(S.xp)/2)),SN=["Beginner","Intermediate","Advanced","Extreme (unlocks with consistency)"];
+function plan(){const base=6+rank(S.xp)*3+Math.floor(S.xp/400),sets=stage()<1?2:3,g=SEL[S.sel],ex=[];
+ g.forEach(k=>EX[k].slice(0,g.length>3?1:3).forEach(n=>ex.push({n,sets,reps:n.includes("sec")?20+base*2:base+(n.includes("Plank")?0:2)})));
+ return[{n:"Warm-up: 2 min light jog in place + arm swings",w:1},...ex,{n:"Cooldown: 3 min stretching",w:1}]}
+function streak(){let n=0,i=0;if(S.days[today()]!="w")i=1;for(;;i++){if(S.days[ago(i)]=="w")n++;else break}return n}
+function restOK(){for(let i=1;i<=6;i++)if(S.days[ago(i)]=="r")return false;return true}
+function penalties(){const t=today();if(S.lastCheck>=t)return;let d=new Date(S.lastCheck+"T12:00:00"),miss=0;
+ while(today(d)<t){const k=today(d);if(!S.days[k]&&!S.paused){S.days[k]="m";miss++;addXP(-30,"Missed workout "+k)}d.setDate(d.getDate()+1)}
+ let run=0;for(let i=1;i<=30&&S.days[ago(i)]=="m";i++)run++;
+ if(run>=7&&!S.halved){const fl=RANKS[rank(S.xp)][1];addXP(-Math.floor((S.xp-fl)/2),"7-day inactivity: 50% rank EXP");S.halved=true}
+ if(S.days[ago(1)]=="w")S.halved=false;
+ if(miss)S.makeup=Math.min(miss,2);S.lastCheck=t;save()}
+/* screens */
+function bars(){return [["STRENGTH",S.stats.str],["STAMINA",S.stats.sta],["HEALTH",S.stats.hp]].map(x=>`<div class="row"><span>${x[0]}</span><b>LV ${x[1]}/100</b></div><div class="bar"><i style="width:${x[1]}%"></i></div>`).join("")}
+function status_old(){const r=rank(S.xp),nx=RANKS[Math.min(6,r+1)],pct=r==6?100:(S.xp-RANKS[r][1])/(nx[1]-RANKS[r][1])*100,c=RANKS[r][2];
+ app.innerHTML=`<div class="scr"><div class="win" style="border-color:${c};box-shadow:0 0 22px ${c}88 inset"><div class="row"><div><h2>${S.username}</h2><span class="mu">Level ${lvl(S.xp)} · ${S.xp} XP</span></div><div class="big rk" style="color:${c};text-shadow:0 0 22px ${c}">${RANKS[r][0]}</div></div>
+ <p class="mu">${r==6?"SSS-Rank: journey complete":"Progress to "+nx[0]+"-Rank"}</p><div class="bar"><i style="width:${pct}%"></i></div></div>
+ <div class="win">${bars()}<p class="mu" style="font-size:.8rem">Game stats from your training, not medical readings.</p></div>
+ <div class="win row"><span>Streak <b>${streak()}</b> days</span><span>Today: <b>${{w:"Workout day",r:"Rest day"}[S.days[today()]]||"Unmarked"}</b></span></div>
+ <div class="win"><h3>SETTINGS</h3><button class="ghost" onclick="S.seen=false;S.accepted=true;save();go()">REPLAY AWAKENING</button><button class="ghost" onclick="remind()">ENABLE 10 PM REMINDER</button><button class="ghost" onclick="S.paused=!S.paused;save();status()">PENALTY PAUSE (illness/injury): ${S.paused?"ON":"OFF"}</button><button class="ghost" onclick="exp()">EXPORT MY DATA</button><button class="danger" onclick="delAcc()">DELETE ACCOUNT</button></div></div>`}
+function ov(h,close){closeModal();const d=document.createElement('div');d.id='md';d.className='ov';d.innerHTML='<div class="win">'+h+(close?'<button class="ghost" onclick="closeModal()">CLOSE</button>':'')+'</div>';document.body.append(d)}
+function closeModal(){const m=$('#md');if(m)m.remove()}
+function home(){const r=rank(S.xp),nx=RANKS[Math.min(6,r+1)],pct=r==6?100:(S.xp-RANKS[r][1])/(nx[1]-RANKS[r][1])*100,c=RANKS[r][2],d=S.days[today()],done=S.log.some(l=>l.d==today());
+ app.innerHTML=`<div class="tr"><button class="ico" aria-label="Settings" onclick="openSet()">⚙</button><button class="ico" aria-label="Achievements" onclick="openAch()">🏆</button></div><div class="scr"><div style="margin-right:56px"><h2>${S.username}</h2><span class="mu">Level ${lvl(S.xp)} · ${S.xp} XP</span></div>
+ <div class="win" style="text-align:center;border-color:${c};box-shadow:0 0 22px ${c}88 inset"><div class="big rk" style="color:${c};text-shadow:0 0 22px ${c}">${RANKS[r][0]}-RANK</div><p class="mu">${r==6?"Journey complete":"Progress to "+nx[0]+"-Rank"}</p><div class="bar"><i style="width:${pct}%"></i></div></div>
+ <div class="win">${bars()}</div>
+ <div class="win"><div class="row"><span>Day streak</span><b class="rk" style="font-size:1.6rem;color:var(--cy)">${streak()}</b></div></div>
+ <div class="win"><div class="row"><span>Steps today</span><b class="rk" id="stp" style="font-size:1.6rem;color:var(--cy)">${(S.steps||{})[today()]||0}</b></div><button class="ghost" id="stb" onclick="stepToggle()">${stepOn?"STOP":"START"} STEP SENSOR</button><p class="mu" id="stm" style="font-size:.8rem">${stepOn?"Counting. Keep the phone on you with this screen open.":"Uses your phone's motion sensor. Counts only while this app is open on screen."}</p></div>
+ <div class="win">${done?"<b>Workout complete today ✔</b>":d=="r"?"<b>Rest day. Recover well.</b>":d=="w"?`<button onclick="quests()">CONTINUE TO QUESTS</button>`:`<button onclick="weekPop()">CHOOSE TODAY'S STATUS</button>`}</div></div>`;
+ if(!d)weekPop()}
+function weekPop(){const c=new Date();c.setDate(c.getDate()-((c.getDay()+6)%7));let h="";["M","T","W","T","F","S","S"].forEach((n,i)=>{const dt=new Date(c);dt.setDate(c.getDate()+i);const k=today(dt),v=S.days[k];h+=`<div class="${k==today()?"t":""}">${n}<b>${v=="w"?"✔":v=="r"?"R":v=="m"?"✕":k==today()?"?":"·"}</b></div>`});
+ ov(`<h2>THIS WEEK</h2><div class="wk">${h}</div><p class="mu" style="font-size:.8rem">✔ workout · R rest · ✕ missed</p><p><b>Is today a workout day or a rest day?</b></p><button onclick="pick('w')">WORKOUT DAY</button><button class="ghost" ${restOK()?"":"disabled style='opacity:.4'"} onclick="pick('r')">REST DAY</button>${restOK()?"":`<p class="mu">Rest day is locked for 6 days after your last one.</p>`}`)}
+function pick(v){if(v=="r"&&!restOK())return toast("Rest day used in the last 6 days");S.days[today()]=v;save();closeModal();v=="w"?quests():go()}
+function quests(){const done=S.log.some(l=>l.d==today()),w=wk();
+ app.innerHTML=`<div class="scr"><button class="ghost" onclick="go()">← BACK TO PROFILE</button><h2>STEP 1 · QUESTS</h2>
+ <div class="win"><div class="row"><b>Daily: complete today's workout</b><span>${done?"✔":"—"}</span></div><p class="mu">+40 to +100 XP</p></div>
+ ${S.makeup?`<div class="win" style="border-color:var(--red)"><b>Make-up quest (missed workout)</b><p>Do today's normal workout plus a 5-minute walk. No extra training volume.</p></div>`:""}
+ <div class="win"><div class="row"><b>Weekly: 4 workouts</b><span>${Math.min(w,4)}/4</span></div><div class="bar"><i style="width:${Math.min(w,4)*25}%"></i></div></div>
+ <button onclick="train()">NEXT: TRAINING</button></div>`}
+function openSet(){ov(`<h2>SETTINGS</h2><button class="ghost" onclick="S.seen=false;S.accepted=true;save();closeModal();go()">REPLAY AWAKENING</button><button class="ghost" onclick="remind()">ENABLE 10 PM REMINDER</button><button class="ghost" onclick="S.paused=!S.paused;save();openSet()">PENALTY PAUSE (illness/injury): ${S.paused?"ON":"OFF"}</button><button class="ghost" onclick="exp()">EXPORT MY DATA</button><button class="danger" onclick="delAcc()">DELETE ACCOUNT</button>`,1)}
+function openAch(){const A=[["First Blood","1 workout",S.log.length>=1],["Consistent","3 workouts",S.log.length>=3],["Week Warrior","7 workouts",S.log.length>=7],["Iron Will","30 workouts",S.log.length>=30],["D-Rank Hunter","Reach D",rank(S.xp)>=1],["S-Rank Hunter","Reach S",rank(S.xp)>=5],["SSS-Rank","Journey complete",rank(S.xp)>=6]];
+ ov(`<h2>ACHIEVEMENTS</h2>${A.map(a=>`<span class="chip ${a[2]?"got":""}" title="${a[1]}">${a[2]?"✔ ":""}${a[0]}</span>`).join("")}<h3 style="margin-top:14px">RANK HISTORY</h3>${S.rankHist.map(r=>`<div class="row"><b class="rk">${r.r}-RANK</b><span class="mu">${r.d}</span></div>`).join("")}`,1)}
+let stepOn=false,sBase=9.8,sSm=0,sPrev=0,sLast=0,gotMotion=false;
+function onMotion(e){const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;gotMotion=true;
+ const m=Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z);sBase=sBase*.95+m*.05;sSm=sSm*.6+(m-sBase)*.4;const t=Date.now();
+ if(sSm>.8&&sPrev<=.8&&t-sLast>300){sLast=t;S.steps=S.steps||{};S.steps[today()]=(S.steps[today()]||0)+1;save();const el=$("#stp");if(el)el.textContent=S.steps[today()]}
+ sPrev=sSm;if(t-(onMotion.u||0)>250){onMotion.u=t;const q=$("#stm");if(q)q.textContent="Sensor live · motion "+Math.abs(sSm).toFixed(2)+" (a step needs a bounce above 0.8)"}}
+async function stepToggle(){const b=$("#stb"),m=$("#stm");
+ if(stepOn){removeEventListener("devicemotion",onMotion);stepOn=false;if(b)b.textContent="START STEP SENSOR";if(m)m.textContent="Stopped.";return}
+ if(typeof DeviceMotionEvent==="undefined")return toast("Motion sensor not supported on this device");
+ try{if(typeof DeviceMotionEvent.requestPermission==="function"){const r=await DeviceMotionEvent.requestPermission();if(r!=="granted")return toast("Motion permission denied")}}catch(e){return toast("Could not get motion permission")}
+ gotMotion=false;sBase=9.8;sSm=0;sPrev=0;addEventListener("devicemotion",onMotion);stepOn=true;
+ if(b)b.textContent="STOP STEP SENSOR";if(m)m.textContent="Counting. Keep the phone on you with this screen open.";
+ setTimeout(()=>{if(stepOn&&!gotMotion){const m2=$("#stm");if(m2)m2.textContent="No motion data received. This device or browser may not expose a motion sensor."}},3000)}
+function exp(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download="limitless-data.json";a.click()}
+function remind(){if(!("Notification"in window))return toast("Notifications not supported here");Notification.requestPermission().then(p=>{toast(p=="granted"?"Reminder on while this app is open":"Permission denied");S.remind=p=="granted";save()})}
+setInterval(()=>{const n=new Date();if(S&&S.remind&&n.getHours()==22&&n.getMinutes()==0&&S.days[today()]!="w"&&S.days[today()]!="r"&&localStorage.getItem("lr")!=today()){localStorage.setItem("lr",today());new Notification("LIMITLESS",{body:"Daily quest incomplete. Finish your workout or mark a rest day."})}},20000);
+function mark(v){if(v=="r"&&!restOK())return toast("Rest day used in the last 6 days");S.days[today()]=v;save();go()}
+function wk(){const c=new Date();c.setDate(c.getDate()-((c.getDay()+6)%7));let n=0;for(let i=0;i<7;i++){const d=new Date(c);d.setDate(c.getDate()+i);if(S.log.some(l=>l.d==today(d)))n++}return n}
+function quests_old(){const done=S.log.some(l=>l.d==today()),w=wk();
+ app.innerHTML=`<div class="scr"><h2>DAILY & WEEKLY QUESTS</h2>
+ <div class="win"><div class="row"><b>Daily: complete today's workout</b><span>${done?"✔":"—"}</span></div><p class="mu">+${40}–${100} XP</p></div>
+ ${S.makeup?`<div class="win" style="border-color:var(--red)"><b>Make-up quest (missed workout)</b><p>Complete today's normal workout plus a 5-minute walk. No extra training volume is required.</p></div>`:""}
+ <div class="win"><div class="row"><b>Weekly: 4 workouts this week</b><span>${Math.min(w,4)}/4</span></div><div class="bar"><i style="width:${Math.min(w,4)*25}%"></i></div></div>
+ <div class="win"><h3>TODAY'S STATUS</h3>${restOK()?"":`<p class="mu">Next rest day available after ${(()=>{for(let i=1;i<=6;i++)if(S.days[ago(i)]=="r")return 7-i})()} more day(s).</p>`}
+ <button onclick="mark('w')">MARK WORKOUT DAY</button><button class="ghost" onclick="mark('r')" ${restOK()?"":"disabled style='opacity:.4'"}>MARK REST DAY</button></div></div>`}
+function train(){const p=plan(),cnt=S.log.filter(l=>l.d==today()).length,done=cnt>=3;
+ app.innerHTML=`<div class="scr"><h2>TRAINING · ${SN[stage()]}</h2><label>Focus</label><select onchange="S.sel=this.value;save();train()">${Object.keys(SEL).map(k=>`<option ${S.sel==k?"selected":""} value="${k}">${k=="full"?"Full body":k=="upper"?"Upper body":k=="lower"?"Lower body":k[0].toUpperCase()+k.slice(1)}</option>`).join("")}</select>
+ <button class="ghost" onclick="go()">← BACK TO PROFILE</button><button class="ghost" onclick="scan()">MODE A · AI CAMERA</button><div class="win"><h3>MODE B · OFFLINE MANUAL TRACKING</h3><p class="mu">Enter reps you actually did. You can repeat the workout up to 3 times a day: the 2nd earns 50% XP and the 3rd 25%. Only the 1st raises your stats.</p>${p.map((e,i)=>e.w?`<p class="mu">${e.n}</p>`:`<div class="ex"><span>${e.n}<br><small class="mu">${e.sets} × ${e.reps}</small></span><input type="number" min="0" max="${e.reps*e.sets*2}" id="r${i}" placeholder="reps"></div>`).join("")}
+ <button ${done?"disabled style='opacity:.4'":""} onclick="finish()">${done?"DAILY LIMIT REACHED (3 SESSIONS)":cnt?`DO IT AGAIN · ${cnt==1?50:25}% XP`:"COMPLETE WORKOUT"}</button></div>
+ <div class="win"><h3>HISTORY</h3>${S.log.slice(-6).reverse().map(l=>`<div class="row"><span>${l.d}</span><span class="mu">${l.reps} reps · ~${l.kcal} kcal · +${l.xp} XP</span></div>`).join("")||"<p class='mu'>No workouts yet.</p>"}</div></div>`}
+function finish(){const p=plan();let reps=0,n=0;p.forEach((e,i)=>{if(e.w)return;const v=Math.min(+($("#r"+i).value||0),e.reps*e.sets*2);if(v>0){n++;reps+=v}});
+ if(n<1)return toast("Enter reps for at least one exercise");if(S.log.filter(l=>l.d==today()).length>=3)return toast("Daily limit reached");
+ const cnt=S.log.filter(l=>l.d==today()).length,xp=Math.round(Math.min(100,40+n*12)*[1,.5,.25][cnt]),kcal=Math.round(reps*0.4+5),dur=Math.round(reps*3/60+8);
+ S.log.push({d:today(),reps,n,kcal,xp,dur});S.days[today()]="w";S.makeup=0;
+ const g=cnt?0:Math.min(2,1+Math.floor(n/4));S.stats.str=Math.min(100,S.stats.str+g);S.stats.sta=Math.min(100,S.stats.sta+g);S.stats.hp=Math.min(100,S.stats.hp+(cnt?0:1));addXP(xp,"Workout");
+ app.innerHTML=`<div class="scr"><div class="win"><h2>WORKOUT COMPLETE</h2><div class="row"><span>Duration</span><b>~${dur} min</b></div><div class="row"><span>Exercises</span><b>${n}</b></div><div class="row"><span>Total reps</span><b>${reps}</b></div><div class="row"><span>Est. calories</span><b>${kcal}</b></div><div class="row"><span>XP earned</span><b style="color:var(--cy)">+${xp}</b></div>${bars()}<button onclick="tab='status';go()">VIEW STATUS</button></div>
+ <div class="win"><h3>NUTRITION GUIDE</h3><p class="mu">Protein: about 1.2–1.6 g/kg bodyweight spread across meals. Carbohydrates: whole grains, fruit and starchy vegetables around training. Fats: nuts, olive oil, fish. Fibre: 25–30 g from vegetables and legumes. Hydration: drink steadily through the day, about 2–3 L. Eat a varied diet for vitamins and minerals; skip crash diets and unneeded supplements.</p></div></div>`}
+async function scan(){app.innerHTML=`<div class="scr"><h2>AI SCANNER</h2><div class="win"><p>Camera pose tracking is not included in this web build. Real-time rep counting needs an on-device pose model (MediaPipe) that this hosted page cannot load, and a simulated version would give you false feedback.</p><p class="mu">You can preview the camera below. Video stays on your device and is never uploaded.</p><video id="vd" playsinline muted style="width:100%;border:1px solid var(--line);display:none"></video><button onclick="cam()">OPEN CAMERA PREVIEW</button><button class="ghost" onclick="train()">USE MANUAL TRACKING</button><p id="er" style="color:var(--red)"></p></div></div>`}
+async function cam(){try{const s=await navigator.mediaDevices.getUserMedia({video:true});const v=$("#vd");v.srcObject=s;v.style.display="block";v.play()}catch(e){$("#er").textContent="Camera unavailable or permission denied."}}
+function ach_old(){const A=[["First Blood","Complete 1 workout",S.log.length>=1],["Consistent","3-day streak",streak()>=3||S.log.length>=3],["Week Warrior","7 workouts logged",S.log.length>=7],["Iron Will","30 workouts logged",S.log.length>=30],["D-Rank Hunter","Reach D-Rank",rank(S.xp)>=1],["S-Rank Hunter","Reach S-Rank",rank(S.xp)>=5],["SSS-Rank","Complete the journey",rank(S.xp)>=6]];
+ app.innerHTML=`<div class="scr"><h2>ACHIEVEMENTS</h2><div class="win">${A.map(a=>`<span class="chip ${a[2]?"got":""}" title="${a[1]}">${a[2]?"✔ ":""}${a[0]}</span>`).join("")}</div>
+ <div class="win"><h3>RANK HISTORY</h3>${S.rankHist.map(r=>`<div class="row"><b class="rk">${r.r}-RANK</b><span class="mu">${r.d}</span></div>`).join("")}</div>
+ <div class="win"><h3>MONTHLY CHECK-IN</h3><p class="mu">How is recovery? Tap one to adjust your plan.</p><button class="ghost" onclick="chk(1)">Feeling strong</button><button class="ghost" onclick="chk(0)">Tired or sore</button></div></div>`}
+function chk(g){if(!g){S.paused=true;save();return toast("Penalties paused. Rest up and see a doctor if pain persists.")}toast("Plan keeps progressing");S.paused=false;save()}
+launch();
+</script></body></html>
